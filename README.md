@@ -23,11 +23,42 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository with MQTT message receiving capabilities using Aedes broker.
+
+## Features
+
+- **MQTT Broker**: Built-in Aedes MQTT broker for receiving and processing MQTT messages
+- **Message Handling**: Smart message routing with wildcard pattern support
+- **Multiple Endpoints**: REST API endpoints and MQTT message handlers
+- **Real-time Processing**: Process collar data, sensor readings, and custom messages in real-time
+
+## MQTT Configuration
+
+This application includes an embedded MQTT broker using Aedes that listens on port 1883 by default. The broker can receive and process messages from MQTT clients.
+
+### Supported Message Patterns
+
+- `mqtt/test` - Test messages with automatic response
+- `collar/prod/+/data` - Collar device data from any device ID
+- `sensor/+/+` - Sensor data (temperature, humidity, motion) from any sensor
+- `#` - Global message handler for debugging
+
+### Environment Variables
+
+```bash
+MQTT_BROKER_PORT=8083  # Port for Aedes MQTT broker (TCP)
+MQTT_WS_PORT=8083      # Port for Aedes MQTT broker (WebSocket)
+MQTT_URL=mqtt://localhost:8083  # MQTT client connection URL
+MQTT_CLIENT_ID=learn-nestjs_xxx  # MQTT client ID (auto-generated if not set)
+```
 
 ## Project setup
 
 ```bash
+# Using bun (recommended)
+$ bun install
+
+# Or using yarn
 $ yarn install
 ```
 
@@ -35,13 +66,73 @@ $ yarn install
 
 ```bash
 # development
-$ yarn run start
+$ bun run start
 
 # watch mode
-$ yarn run start:dev
+$ bun run start:dev
 
 # production mode
-$ yarn run start:prod
+$ bun run start:prod
+```
+
+## Testing MQTT Functionality
+
+After starting the application, you can test the MQTT message receiving functionality:
+
+### WebSocket MQTT Testing (Recommended)
+
+```bash
+# Run the WebSocket MQTT test client
+$ node test-mqtt-websocket-client.js
+```
+
+This will:
+
+1. Connect to the embedded MQTT broker via WebSocket (port 8083)
+2. Test both local and Cloudflare tunnel connections
+3. Send various test messages to different topics
+4. Show the responses and processing results
+5. Demonstrate the WebSocket MQTT capabilities
+
+### Traditional TCP MQTT Testing
+
+```bash
+# Run the traditional TCP MQTT client
+$ node test-mqtt-client.js
+```
+
+### Manual Testing with MQTT Clients
+
+#### Local WebSocket Testing
+
+```javascript
+// Using Node.js MQTT library with WebSocket
+const mqtt = require('mqtt');
+const client = mqtt.connect('ws://localhost:8083');
+
+client.on('connect', () => {
+  client.publish('mqtt/test', '{"message": "Hello WebSocket MQTT!"}');
+});
+```
+
+#### Traditional TCP Testing
+
+```bash
+# Test basic message (TCP)
+mosquitto_pub -h localhost -p 8083 -t "mqtt/test" -m '{"message": "Hello World"}'
+
+# Test collar data (TCP)
+mosquitto_pub -h localhost -p 8083 -t "collar/prod/device123/data" -m '{"batteryLevel": 85, "gpsLocation": {"lat": 37.5, "lng": 126.9}}'
+
+# Test sensor data (will trigger temperature alert)
+mosquitto_pub -h localhost -p 8083 -t "sensor/temperature/sensor001" -m '{"temperature": 35.5}'
+```
+
+#### Cloudflare Tunnel WebSocket Testing
+
+```javascript
+// Using WebSocket through Cloudflare tunnel
+const client = mqtt.connect('ws://wanee.telepodsee.com');
 ```
 
 ## Run tests
