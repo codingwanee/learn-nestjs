@@ -39,18 +39,17 @@ $ bun run start:dev
 $ bun run start:prod
 ```
 
-## Testing MQTT Functionality
+### Manual Testing with MQTT Clients
 
-After starting the application, you can test the MQTT message receiving functionality:
-
-### Traditional TCP MQTT Testing
+#### ngrok
 
 ```bash
-# Run the traditional TCP MQTT client
-$ node test-mqtt-client.js
-```
+# start local server
+bun start dev
 
-### Manual Testing with MQTT Clients
+# connect with ngrok
+ngrok tcp 1883
+```
 
 #### Traditional TCP Testing
 
