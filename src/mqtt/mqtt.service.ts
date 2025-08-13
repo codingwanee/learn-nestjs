@@ -87,26 +87,13 @@ export class MqttService implements OnApplicationBootstrap {
       console.log('parsedPayload', parsedPayload);
 
       // MongoDB에 저장
-      // const result = await mongoDb.collection('test').insertOne({
-      //   id: deviceId,
-      //   value: parsedPayload,
-      //   timestamp: new Date(),
-      // });
-
-      const doc = {
-        id: toStringStrict(deviceId), // 숫자/버퍼여도 문자열로
-        value: toStringStrict(parsedPayload), // object면 JSON 문자열로
-        timestamp: new Date(), // BSON Date
-      };
-
-      console.log({
-        idType: typeof doc.id,
-        valueType: typeof doc.value,
-        tsIsDate: doc.timestamp instanceof Date,
-        tsMS: doc.timestamp.getTime(), // NaN이면 Invalid Date
+      const result = await mongoDb.collection('test').insertOne({
+        id: deviceId,
+        value: parsedPayload,
+        timestamp: new Date(),
       });
 
-      // console.log('result', result);
+      console.log('result', result);
 
       this.logger.log(`💾 Message saved to MongoDB: ${packet.topic}`);
     } catch (error) {
