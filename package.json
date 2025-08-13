@@ -23,16 +23,16 @@
     "@nestjs/common": "^11.0.1",
     "@nestjs/core": "^11.0.1",
     "@nestjs/microservices": "^11.1.6",
+    "@nestjs/mongoose": "^11.0.3",
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/platform-fastify": "^11.1.5",
     "aedes": "^0.51.3",
     "class-validator": "^0.14.2",
     "fastify": "^5.4.0",
+    "mongoose": "^8.17.1",
     "mqtt": "^5.14.0",
     "reflect-metadata": "^0.2.2",
-    "rxjs": "^7.8.1",
-    "websocket-stream": "^5.5.2",
-    "ws": "^8.18.3"
+    "rxjs": "^7.8.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
